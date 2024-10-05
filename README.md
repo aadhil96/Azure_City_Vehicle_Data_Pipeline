@@ -35,3 +35,24 @@ This repository contains the architecture and detailed explanation of the pipeli
 ### 7. Azure SQL Database
 - The final destination for **processed and validated JSON data**.
 - **ADF** loads the validated data into this **Azure SQL Database** for structured storage and analysis.
+
+## Data Pipeline Flow
+
+### 1. Data Ingestion
+- **JSON files** from IoT devices are uploaded to an **AWS S3 Bucket**.
+- **Azure Data Factory (ADF)** is triggered to ingest the data from the S3 bucket to the **Landing Folder** in Azure Blob Storage.
+
+### 2. Data Validation
+- An **Azure Function** performs **data validation** by inspecting the JSON structure and integrity.
+- **Valid JSON data** is passed to the **Staging Folder**, while **invalid data** is sent to the **Rejected Folder**.
+
+### 3. Staging
+- **Valid data** is stored in the **Staging Folder** in Azure Blob Storage for further processing.
+
+### 4. Data Loading
+- The **validated and transformed data** from the Staging folder is loaded into **Azure SQL Database** using **Azure Data Factory**.
+
+### 5. End-to-End Monitoring
+- **Azure Data Factory** provides monitoring and logging to track the progress and performance of the pipeline.
+- **Rejected data** in the **Rejected Folder** can be reviewed and corrected manually.
+
