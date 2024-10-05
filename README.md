@@ -56,3 +56,32 @@ This repository contains the architecture and detailed explanation of the pipeli
 - **Azure Data Factory** provides monitoring and logging to track the progress and performance of the pipeline.
 - **Rejected data** in the **Rejected Folder** can be reviewed and corrected manually.
 
+
+## Azure Function for Data Validation
+
+Below is the Azure Function used for validating the incoming JSON data from the IoT devices. It ensures the integrity and structure of the data, routing valid files to the **Staging Folder** and invalid files to the **Rejected Folder**.
+
+```javascript
+module.exports = async function (context, myBlob) {
+    context.log("JavaScript blob trigger function processed blob \n Blob:");
+    context.log("********Azure Function Started********");
+    var result = true;
+    try {
+        context.log(myBlob.toString());
+        JSON.parse(myBlob.toString().trim().replace('\n', ' '));
+    } catch (exception) {
+        context.log(exception);
+        result = false;
+    }
+    
+    if (result) {
+        context.bindings.stagingFolder = myBlob.toString();
+        context.log("********File Copied to Staging Folder Successfully********");
+    } else {
+        context.bindings.rejectedFolder = myBlob.toString();
+        context.log("********Invalid JSON File Copied to Rejected Folder Successfully********");
+    }
+
+    context.log("*******Azure Function Ended Successfully*******");
+};
+
