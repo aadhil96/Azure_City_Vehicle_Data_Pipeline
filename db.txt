@@ -1,0 +1,9 @@
+create table dbo.VehicleData (
+VehicleID nvarchar(100),
+latitiude decimal,
+longitude decimal,
+City nvarchar(100),
+temeprature int ,
+speed int )
+
+SELECT * FROM  dbo.VehicleData;
